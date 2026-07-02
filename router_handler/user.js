@@ -1,4 +1,5 @@
 const db = require('../db/index');
+const bcrypt = require('bcryptjs');
 
 exports.reguser = (req, res) => {
     const userinfo = req.body
@@ -16,7 +17,25 @@ exports.reguser = (req, res) => {
                 return res.send({ status: 1, message: '用户名被占用，请更换其他用户名' });
             }
         // TODO: 用户名可用，继续后续流程
-        res.send('reguser ok');
+        // 原密码
+        console.log(userinfo.password);
+      userinfo.password =   bcrypt.hashSync(userinfo.password, 10);
+    //   加密后的密码
+      console.log(userinfo.password);
+
+
+      const sql = 'insert into ev_users set ?';
+
+
+      db.query(sql, {username: userinfo.username, password: userinfo.password}, (err, results) => {
+        if (err) {
+            return res.send({ status: 1, message: err.message });
+        }
+        if (results.affectedRows !== 1) {
+            return res.send({ status: 1, message: '注册用户失败，请稍后再试' });
+      } })
+
+        res.send({ status: 0, message: '注册成功' });
     })
 
     
