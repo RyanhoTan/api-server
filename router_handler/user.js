@@ -1,5 +1,7 @@
 const db = require('../db/index');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const config = require('../config');
 
 exports.reguser = (req, res) => {
     const userinfo = req.body
@@ -56,7 +58,13 @@ exports.login = (req, res) => {
         if (!isMatch) {
             return res.cc('用户名或密码错误');
         }
-        res.send('login ok');
+        const user = { ...results[0], password: '', user_pic: '' }
+        const tokenStr = jwt.sign(user, config.jwtSecret, { expiresIn: config.expireIn })
+        res.send({
+            status: 0,
+            message: '登录成功',
+            token: 'Bearer ' + tokenStr
+        });
     })
    
 }
