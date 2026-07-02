@@ -6,7 +6,7 @@ exports.reguser = (req, res) => {
     // if (!userinfo.username || !userinfo.password) {
     //     return res.cc('用户名或密码不合法');
     // }
-    
+
     const sql = 'select * from ev_users where username=?';
     db.query(sql, userinfo.username, (err, results) => {
         if (err) {
@@ -43,5 +43,20 @@ exports.reguser = (req, res) => {
 }
 
 exports.login = (req, res) => {
-    res.send('login ok');
+    const userinfo = req.body
+    const sql = 'select * from ev_users where username=?';
+    db.query(sql, userinfo.username, (err, results) => {
+        if (err) {
+            return res.cc(err.message);
+        }
+        if (results.length !== 1) {
+            return res.cc('登录失败');
+        }
+        const isMatch = bcrypt.compareSync(userinfo.password, results[0].password);
+        if (!isMatch) {
+            return res.cc('用户名或密码错误');
+        }
+        res.send('login ok');
+    })
+   
 }
