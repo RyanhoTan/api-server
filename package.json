@@ -20,7 +20,6 @@
   "homepage": "https://github.com/RyanhoTan/api-server#readme",
   "dependencies": {
     "@escook/express-joi": "^1.1.1",
-    "@hapi/joi": "^17.1.1",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "express": "^5.2.1",

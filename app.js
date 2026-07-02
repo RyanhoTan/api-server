@@ -1,9 +1,11 @@
 const express = require('express');
 const cors = require('cors');
-
+const joi = require('joi');
 
 const app = express();
 
+
+app.use(cors());
 // 这个记得放在路由前面解析，不然路由拿到的body是乱码
 app.use(express.urlencoded({ extended: false }));
 
@@ -21,7 +23,12 @@ app.use((req, res, next) => {
 const userRouter = require('./router/user');
 app.use('/api', userRouter);
 
-app.use(cors());
+app.use((err, req, res, next) => {
+    if (err instanceof joi.ValidationError) {
+        return res.cc(err)
+    }
+    res.cc(err)
+})
 
 
 // app.use(express.json());

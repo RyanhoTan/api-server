@@ -3,9 +3,10 @@ const bcrypt = require('bcryptjs');
 
 exports.reguser = (req, res) => {
     const userinfo = req.body
-    if (!userinfo.username || !userinfo.password) {
-        return res.cc('用户名或密码不合法');
-    }
+    // if (!userinfo.username || !userinfo.password) {
+    //     return res.cc('用户名或密码不合法');
+    // }
+    
     const sql = 'select * from ev_users where username=?';
     db.query(sql, userinfo.username, (err, results) => {
         if (err) {
