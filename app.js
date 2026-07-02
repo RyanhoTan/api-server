@@ -5,8 +5,6 @@ const joi = require('joi');
 const { expressjwt: expressJwt } = require('express-jwt');
 
 const app = express();
- 
-app.use(expressJwt({ secret: config.jwtSecret, algorithms: ['HS256'] }).unless({ path: [/^\/api\//] }));
 
 app.use(cors());
 // 这个记得放在路由前面解析，不然路由拿到的body是乱码
@@ -23,9 +21,12 @@ app.use((req, res, next) => {
     next()
 })
 
-const userRouter = require('./router/user');
-app.use('/api', userRouter);
+app.use(expressJwt({ secret: config.jwtSecret, algorithms: ['HS256'] }).unless({ path: [/^\/api\//] }));
 
+const userRouter = require('./router/user');
+const userinfoRouter = require('./router/userinfo');
+app.use('/api', userRouter);
+app.use('/my', userinfoRouter);
 app.use((err, req, res, next) => {
     if (err instanceof joi.ValidationError) {
         return res.cc(err)
