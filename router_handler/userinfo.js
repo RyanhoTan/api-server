@@ -16,3 +16,12 @@ exports.getUserInfo = (req, res) => {
         });
     });
 }
+
+exports.updateUserInfo = (req, res) => {
+    const sql = 'update ev_users set ? where id=?';
+    db.query(sql, [req.body, req.body.id], (err, results) => {
+        if (err) return res.cc(err);
+        if (results.affectedRows !== 1) return res.cc('更新用户信息失败');
+        return res.cc('更新用户信息成功', 0);
+    })
+}
